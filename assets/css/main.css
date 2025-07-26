@@ -98,6 +98,96 @@ input, select, textarea {
 		background: #1b1f22;
 	}
 
+	/* Background Video */
+	.background-video {
+		position: fixed;
+		right: 0;
+		bottom: 0;
+		min-width: 100vw;
+		min-height: 100vh;
+		width: auto;
+		height: auto;
+		z-index: -1;
+		object-fit: cover;
+		pointer-events: none;
+	}
+
+	/* Work Gallery */
+	.work-gallery {
+		margin-top: 2em;
+	}
+
+	.work-item {
+		margin-bottom: 2em;
+		padding: 1.5em;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.work-item h3 {
+		margin-bottom: 0.5em;
+		color: #ffffff;
+	}
+
+	.work-item p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	/* Form improvements */
+	#contact-form .field input:focus,
+	#contact-form .field textarea:focus {
+		border-color: #9bf1ff;
+		box-shadow: 0 0 0 1px #9bf1ff;
+	}
+
+	/* Accessibility improvements */
+	.icon[aria-label]:focus {
+		outline: 2px solid #9bf1ff;
+		outline-offset: 2px;
+	}
+
+	/* Smooth transitions */
+	* {
+		transition: all 0.2s ease-in-out;
+	}
+
+	/* Better focus states */
+	button:focus,
+	input:focus,
+	textarea:focus,
+	select:focus {
+		outline: 2px solid #9bf1ff;
+		outline-offset: 2px;
+	}
+
+	/* Improved button hover states */
+	.button:hover,
+	input[type="submit"]:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	/* Success message styling */
+	.success-message {
+		text-align: center;
+		padding: 2em;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.success-message h3 {
+		color: #9bf1ff;
+		margin-bottom: 0.5em;
+	}
+
+	.success-message p {
+		color: rgba(255, 255, 255, 0.8);
+		margin: 0;
+	}
+
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
 			-moz-animation: none !important;
 			-webkit-animation: none !important;
@@ -1111,7 +1201,7 @@ input, select, textarea {
 		-webkit-transform: scale(1.0);
 		-ms-transform: scale(1.0);
 		transform: scale(1.0);
-		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -1140,9 +1230,12 @@ input, select, textarea {
 			-ms-transition-delay: 0.75s;
 			transition-delay: 0.75s;
 			background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../../images/overlay.png");
-			background-size: auto, 256px 256px;
-			background-position: center, center;
-			background-repeat: no-repeat, repeat;
+			background-size: auto,
+ 256px 256px;
+			background-position: center,
+ center;
+			background-repeat: no-repeat,
+ repeat;
 			z-index: 2;
 		}
 
@@ -1501,6 +1594,9 @@ input, select, textarea {
 /* Main */
 
 	#main {
+		overflow-y: auto;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
 		-moz-flex-grow: 1;
 		-webkit-flex-grow: 1;
 		-ms-flex-grow: 1;
