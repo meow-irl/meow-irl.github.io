@@ -132,7 +132,7 @@ input, select, textarea {
 
 	.work-item p {
 		margin: 0;
-		color: #a000ff;
+		color: #ffffff;
 	}
 
 	/* Form improvements */
@@ -265,7 +265,7 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #a000ff;
+		color: #ffffff;
 		font-weight: 600;
 		line-height: 1.5;
 		margin: 0 0 1rem 0;
@@ -279,7 +279,7 @@ input, select, textarea {
 		}
 
 		h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
-			border-bottom: solid 1px #a000ff;
+			border-bottom: solid 1px #ffffff;
 			width: -moz-max-content;
 			width: -webkit-max-content;
 			width: -ms-max-content;
