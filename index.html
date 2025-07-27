@@ -36,6 +36,17 @@
 			#header .logo {
 			border: solid 1px #a000ff;
 			}
+
+			.frosted-nav {
+ 			 backdrop-filter: blur(12px) saturate(160%);
+ 			 -webkit-backdrop-filter: blur(12px) saturate(160%);
+			  background-color: rgba(0, 0, 0, 0.3); 
+ 			 border-radius: 12px;
+ 			 padding: 1rem;
+ 			 margin-top: 1.5rem;
+ 			 display: inline-block;
+			}
+
 </style>
 	</head>
 	<body class="is-preload">
@@ -72,12 +83,15 @@
 					</div>
 				</div>
 				<nav>
-					<ul>
-						<li><a href="#intro" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">intro</a></li>
-						<li><a href="#work" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">work</a></li>
-						<li><a href="#about" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">about</a></li>
-					</ul>
+ 					 <div class="frosted-nav">
+  					  <ul>
+    				  <li><a href="#intro">intro</a></li>
+     				 <li><a href="#work">work</a></li>
+     				 <li><a href="#about">about</a></li>
+ 				   </ul>
+  				</div>
 				</nav>
+
 			</header>
 
 			<!-- Main -->
