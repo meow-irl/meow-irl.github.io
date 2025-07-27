@@ -268,17 +268,17 @@
 					setTimeout(() => {
 						console.log("Welcome sequence: Adding 'show' class to welcomeTitle");
 						$('#welcomeTitle').addClass('show');
-					}, 500);
+					}, 0);
 
 					setTimeout(() => {
 						console.log("Welcome sequence: Adding 'show' class to welcomeSubtitle");
 						$('#welcomeSubtitle').addClass('show');
-					}, 1200);
+					}, 300);
 
 					setTimeout(() => {
 						console.log("Welcome sequence: Adding 'show' class to welcomeDisclaimer");
 						$('#welcomeDisclaimer').addClass('show');
-					}, 1500);
+					}, 500);
 
 					// After welcome sequence, transition to main content
 					setTimeout(() => {
@@ -288,30 +288,30 @@
 						// Show main wrapper
 						setTimeout(() => {
 							$('#wrapper').addClass('show');
-						}, 500);
+						}, 100);
 
 						// Show profile picture and header content
 						setTimeout(() => {
 							$('#profilePicture').addClass('show');
 							$('#headerContent').addClass('show');
-						}, 1000);
+						}, 300);
 
 						// Show navigation
 						setTimeout(() => {
 							$('#mainNav').addClass('show');
-						}, 1250);
+						}, 500);
 
 						// Show background video
 						setTimeout(() => {
 							$('.background-video').addClass('show');
-						}, 1500);
+						}, 750);
 
 						// Remove main welcome screen from DOM
 						setTimeout(() => {
 							$('#mainWelcomeScreen').remove();
-						}, 1000);
+						}, 500);
 
-					}, 1000); // Wait 1 second before starting transition
+					}, 0); // Wait 0 second before starting transition
 				}
 			});
 		</script>
