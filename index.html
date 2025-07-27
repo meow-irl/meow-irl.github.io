@@ -59,17 +59,30 @@
 			backdrop-filter: blur(12px) saturate(160%);
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
  			z-index: -1;
+
 			}
 
 			.inner {
  			position: relative;
 			z-index: 1;
 			}
-
-			body.is-preload .glass-wrapper {
-			opacity: 0;
-			transition: none;
+			
+			@media screen and (max-width: 768px) {
+			#header nav ul {
+			flex-direction: column;
+			border: none;
 			}
+
+			#header nav ul li {
+			border-left: none !important;
+			border-top: 1px solid #a000ff;
+			}
+
+			#header nav ul li:first-child {
+			border-top: none; /* remove top border from the first button */
+			}
+}
+		
 
 </style>
 	</head>
