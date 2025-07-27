@@ -59,36 +59,35 @@
 			backdrop-filter: blur(12px) saturate(160%);
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
  			z-index: -1;
-
+			pointer-events: none;
 			}
 
 			.inner {
  			position: relative;
 			z-index: 1;
 			}
-			
-			@media screen and (max-width: 768px) {
-			#header nav ul {
-			
-			border: solid 1px #a000ff;
-			flex-direction: column;
-			}
 
-			#header nav ul li {
-			border-left: none !important;
-			border-top: 1px solid #a000ff; 
-			}
 
-			#header nav ul li:first-child {
-			border-top: none; 
-			}
 
-}
-		
-
-</style>
+		</style>
 	</head>
 	<body class="is-preload">
+
+		<!-- Hi Welcome Screen -->
+		<div class="hi-welcome-screen" id="hiWelcomeScreen">
+			<div class="hi-welcome-content">
+				<div class="hi-welcome-text" id="hiWelcomeText"></div>
+			</div>
+		</div>
+
+		<!-- Main Welcome Screen -->
+		<div class="welcome-screen" id="mainWelcomeScreen">
+			<div class="welcome-content">
+				<div class="welcome-title" id="welcomeTitle"></div>
+				<div class="welcome-subtitle" id="welcomeSubtitle"></div>
+				<div class="welcome-disclaimer" id="welcomeDisclaimer"></div>
+			</div>
+		</div>
 
 		<!-- Wrapper -->
 		<div id="wrapper">
@@ -101,7 +100,8 @@
 					<div class="inner">
 						<div class="glass-wrapper"></div>
 						
-							<div style="
+						<div class="header-content" id="headerContent">
+							<div class="profile-picture" id="profilePicture" style="
   							width: 200px;
   							height: 200px;
  							border-radius: 50%;
@@ -120,10 +120,11 @@
 							</div>
 							<h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
 							<p style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
+						</div>
 						
 					</div>
 				</div>
-				<nav>
+				<nav id="mainNav">
  					 <div class="frosted-nav">
   					  <ul>
     				  <li><a href="#intro" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">intro</a></li>
@@ -182,7 +183,122 @@
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
+		<script src="assets/js/randomequote.js"></script>
 		<script src="assets/js/main.js"></script>
+
+		<!-- Welcome Screen Script -->
+		<script>
+			$(document).ready(function() {
+				// Preload images
+				const imagesToPreload = [
+					'images/cat.PNG',
+					'images/pic01.jpg',
+					'images/pic02.jpg',
+					'images/pic03.jpg'
+				];
+
+				// Preload function
+				function preloadImages(images, callback) {
+					let loadedCount = 0;
+					images.forEach(src => {
+						const img = new Image();
+						img.onload = () => {
+							loadedCount++;
+							if (loadedCount === images.length) {
+								callback();
+							}
+						};
+						img.onerror = () => {
+							loadedCount++;
+							if (loadedCount === images.length) {
+								callback();
+							}
+						};
+						img.src = src;
+					});
+				}
+
+				// Start the welcome sequence after preloading
+				preloadImages(imagesToPreload, function() {
+					// Wait a bit for randomequote.js to populate the content
+					setTimeout(() => {
+						startHiWelcomeSequence();
+					}, 100);
+				});
+
+				function startHiWelcomeSequence() {
+					console.log("Welcome sequence: Starting hi welcome sequence");
+					// Show hi-welcome-text
+					setTimeout(() => {
+						console.log("Welcome sequence: Adding 'show' class to hiWelcomeText");
+						$('#hiWelcomeText').addClass('show');
+					}, 500);
+
+					// After hi welcome, fade out hi screen and start main welcome sequence
+					setTimeout(() => {
+						console.log("Welcome sequence: Fading out hi welcome screen");
+						$('#hiWelcomeScreen').addClass('fade-out');
+						setTimeout(() => {
+							console.log("Welcome sequence: Removing hi welcome screen and starting main sequence");
+							$('#hiWelcomeScreen').remove();
+							startMainWelcomeSequence();
+						}, 1000);
+					}, 3000); // Display hi screen for 3 seconds
+				}
+
+				function startMainWelcomeSequence() {
+					console.log("Welcome sequence: Starting main welcome sequence");
+					// Show main welcome screen content with staggered animations
+					setTimeout(() => {
+						console.log("Welcome sequence: Adding 'show' class to welcomeTitle");
+						$('#welcomeTitle').addClass('show');
+					}, 500);
+
+					setTimeout(() => {
+						console.log("Welcome sequence: Adding 'show' class to welcomeSubtitle");
+						$('#welcomeSubtitle').addClass('show');
+					}, 1200);
+
+					setTimeout(() => {
+						console.log("Welcome sequence: Adding 'show' class to welcomeDisclaimer");
+						$('#welcomeDisclaimer').addClass('show');
+					}, 1500);
+
+					// After welcome sequence, transition to main content
+					setTimeout(() => {
+						// Fade out main welcome screen
+						$('#mainWelcomeScreen').addClass('fade-out');
+						
+						// Show main wrapper
+						setTimeout(() => {
+							$('#wrapper').addClass('show');
+						}, 500);
+
+						// Show profile picture and header content
+						setTimeout(() => {
+							$('#profilePicture').addClass('show');
+							$('#headerContent').addClass('show');
+						}, 1000);
+
+						// Show navigation
+						setTimeout(() => {
+							$('#mainNav').addClass('show');
+						}, 1500);
+
+						// Show background video
+						setTimeout(() => {
+							$('.background-video').addClass('show');
+						}, 2000);
+
+						// Remove main welcome screen from DOM
+						setTimeout(() => {
+							$('#mainWelcomeScreen').remove();
+						}, 2000);
+
+					}, 1000); // Wait 1 second before starting transition
+				}
+			});
+		</script>
 
 	</body>
 </html>
