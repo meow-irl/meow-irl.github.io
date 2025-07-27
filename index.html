@@ -68,19 +68,21 @@
 			}
 			
 			@media screen and (max-width: 768px) {
-			#header nav ul {
-			flex-direction: column;
-			border: none;
-			}
+	#header nav ul {
+		/* Keep the outer border! */
+		border: solid 1px #a000ff;
+		flex-direction: column;
+	}
 
-			#header nav ul li {
-			border-left: none !important;
-			border-top: 1px solid #a000ff;
-			}
+	#header nav ul li {
+		border-left: none !important; /* Remove vertical borders between items */
+		border-top: 1px solid #a000ff; /* Add horizontal borders instead */
+	}
 
-			#header nav ul li:first-child {
-			border-top: none; /* remove top border from the first button */
-			}
+	#header nav ul li:first-child {
+		border-top: none; /* First item shouldn't have a top border */
+	}
+
 }
 		
 
