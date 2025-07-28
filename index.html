@@ -214,7 +214,18 @@
 
 		<!-- Welcome Screen Script -->
 		<script>
-			$(document).ready(function() {
+			$(document).ready(function()
+			
+			setTimeout(() => {
+	const glass = document.querySelector('.glass-wrapper');
+	if (glass) {
+		glass.style.display = 'none';
+		void glass.offsetHeight; // hopefully ts will fix the glass wrapper not loading i just copied this from gpt
+		glass.style.display = '';
+	}
+}, 10);
+
+{
 				// Preload images
 				const imagesToPreload = [
 					'images/cat.PNG',
