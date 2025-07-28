@@ -216,16 +216,16 @@
 		<script>
 			$(document).ready(function()
 			
-			setTimeout(() => {
+			{
+
+				setTimeout(() => {
 	const glass = document.querySelector('.glass-wrapper');
 	if (glass) {
 		glass.style.display = 'none';
-		void glass.offsetHeight; // hopefully ts will fix the glass wrapper not loading i just copied this from gpt
+		void glass.offsetHeight; 
 		glass.style.display = '';
-	}
+	} // should fix glass not loading
 }, 10);
-
-{
 				// Preload images
 				const imagesToPreload = [
 					'images/cat.PNG',
