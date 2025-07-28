@@ -221,8 +221,21 @@
 		<!-- Welcome Screen Script -->
 		<script>
 			$(document).ready(function()
+
+			
 			
 			{
+
+setTimeout(() => {
+  const glass = document.querySelector('.glass-wrapper');
+  if (glass) {
+    glass.style.opacity = '0.99';
+    setTimeout(() => {
+      glass.style.opacity = '';
+    }, 10);
+  }
+}, 50);
+			
 				// Preload images
 				const imagesToPreload = [
 					'images/cat.PNG',
