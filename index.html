@@ -60,7 +60,13 @@
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
  			z-index: -1;
 			pointer-events: none;
+			  /* 🪄 Force early rendering */
+  			will-change: backdrop-filter;
+  			transform: translateX(-50%) translateZ(0); /* extra translateZ to force GPU layer */
 			}
+
+
+
 
 			.inner {
  			position: relative;
