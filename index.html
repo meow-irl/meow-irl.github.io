@@ -60,10 +60,8 @@
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
  			z-index: -1;
 			pointer-events: none;
-			  /* 🪄 Force early rendering */
-  			will-change: backdrop-filter;
-  			transform: translateX(-50%) translateZ(0); /* extra translateZ to force GPU layer */
 			}
+
 
 
 
@@ -221,21 +219,8 @@
 		<!-- Welcome Screen Script -->
 		<script>
 			$(document).ready(function()
-
-			
 			
 			{
-
-setTimeout(() => {
-  const glass = document.querySelector('.glass-wrapper');
-  if (glass) {
-    glass.style.opacity = '0.99';
-    setTimeout(() => {
-      glass.style.opacity = '';
-    }, 10);
-  }
-}, 50);
-			
 				// Preload images
 				const imagesToPreload = [
 					'images/cat.PNG',
