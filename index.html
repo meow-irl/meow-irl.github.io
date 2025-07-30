@@ -78,6 +78,10 @@
  			 text-shadow: 0 0 8px #a000ff, 0 0 16px #a000ff;
 			}
 
+			#main article {
+ 			 display: none;
+			}
+
 			@media screen and (max-width: 768px) {
 			#header nav ul {
 
@@ -345,6 +349,24 @@ $(document).ready(function () {
     $(target).fadeIn(300);
   });
 
+});
+</script>
+
+<script>
+$(document).ready(function () {
+  // Only for about and comms
+  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function (e) {
+    e.preventDefault(); // Stop default anchor jump
+    const target = $(this).attr('href');
+
+    // Hide all articles
+    $('#main article').hide();
+
+    // Show the selected one
+    $(target).fadeIn(300);
+  });
+
+  // Let "work" behave as normal and show the popup
 });
 </script>
 
