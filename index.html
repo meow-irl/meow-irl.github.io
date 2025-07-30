@@ -340,19 +340,24 @@
 
 <script>
 $(document).ready(function () {
-  // When clicking About or Comms
-  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function (e) {
-    e.preventDefault(); // Prevent anchor default behavior
+  $('#mainNav a').on('click', function (e) {
     const target = $(this).attr('href');
 
-    // Hide all other sections
-    $('.section').hide();
+    // If target is about or comms, show in center
+    if (target === '#about' || target === '#comms') {
+      e.preventDefault(); // Stop default behavior
 
-    // Show only the one we clicked
-    $(target).fadeIn(300);
+      // Hide all custom center sections
+      $('.section').hide();
+
+      // Hide all articles/popups (like work)
+      $('#main article').hide();
+
+      // Show the correct section
+      $(target).fadeIn(300);
+    }
+    // Else (e.g. #work), let the old popup logic run
   });
-
-  // Let "work" behave normally for the popup
 });
 </script>
 
