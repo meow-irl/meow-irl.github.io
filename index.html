@@ -335,22 +335,7 @@
 				}
 			});
 		</script>
-		<script>
-$(document).ready(function () {
-  // Handle tab-like behavior for 'about' and 'comms'
-  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function (e) {
-    e.preventDefault(); // stop default behavior
-    const target = $(this).attr('href');
 
-    // Hide all articles inside #main
-    $('#main article').hide();
-
-    // Show the one that was clicked
-    $(target).fadeIn(300);
-  });
-
-});
-</script>
 
 <script>
 $(document).ready(function () {
