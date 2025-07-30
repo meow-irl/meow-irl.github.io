@@ -344,23 +344,42 @@ $(document).ready(function () {
   $('#mainNav a').on('click', function (e) {
     const target = $(this).attr('href');
 
-    // If target is about or comms, show in center
+    // Only override for about or comms
     if (target === '#about' || target === '#comms') {
-      e.preventDefault(); // Stop default behavior
+      e.preventDefault();
 
-      // Hide all custom center sections
-      $('.section').hide();
+      // Define the replacement content
+      let content = '';
 
-      // Hide all articles/popups (like work)
-      $('#main article').hide();
+      if (target === '#about') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content" id="headerContent">
+            <h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">i make stuff. like. 3d stuff.</p>
+          </div>
+        `;
+      }
 
-      // Show the correct section
-      $(target).fadeIn(300);
+      if (target === '#comms') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content" id="headerContent">
+            <h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions open. dm me.</p>
+          </div>
+        `;
+      }
+
+      // Replace the inner content
+      $('#header .inner').html(content);
     }
-    // Else (e.g. #work), let the old popup logic run
+
+    // Let work behave as normal (uses the popup)
   });
 });
 </script>
+
 
 	</body>
 </html>
