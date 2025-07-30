@@ -373,6 +373,14 @@ $(document).ready(function () {
 
       // Replace the inner content
       $('#header .inner').html(content);
+
+		setTimeout(() => {
+ 	 $('#headerContent').css({
+  	  opacity: 1,
+ 	   display: 'block',
+  	  zIndex: 2
+ 		 });
+		}, 10);
     }
 
     // Let work behave as normal (uses the popup)
