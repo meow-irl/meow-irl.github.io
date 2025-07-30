@@ -372,27 +372,32 @@ $(document).ready(function () {
       }
 
       const $inner = $('#header .inner');
+      const oldHeight = $inner.outerHeight();
 
-// Step 1: Animate current content out
-$inner.css({
-  transition: 'opacity 0.3s ease, transform 0.3s ease',
-  opacity: 0,
-  transform: 'translateY(20px)'
-});
+      // Create a temp element to measure new height
+      const $temp = $('<div>').css({
+        visibility: 'hidden',
+        position: 'absolute',
+        width: $inner.width()
+      }).html(content).appendTo('body');
 
-// Step 2: Wait for fade-out, then replace content
-setTimeout(() => {
-  $inner.html(content);
+      const newHeight = $temp.outerHeight();
+      $temp.remove();
 
-  // Step 3: Force browser to recognize DOM change
-  void $inner[0].offsetWidth;
+      // Animate the height change
+      $inner.css('height', oldHeight);
+      $inner.html(content);
+      $inner.animate({ height: newHeight }, 400, function () {
+        $inner.css('height', 'auto');
+      });
 
-  // Step 4: Animate new content in
-  $inner.css({
-    opacity: 1,
-    transform: 'translateY(0)'
-  });
-
+      // Optional: Fade-in the new content
+      setTimeout(() => {
+        $('#headerContent').css({
+          opacity: 1,
+          display: 'block',
+          zIndex: 2
+        });
       }, 10);
     }
 
