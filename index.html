@@ -132,7 +132,7 @@
 				<div class="top-line">
 				</div>
 				<div class="content">
-					<div class="inner">
+					<div class="inner" id="headerInner">
 						<div class="glass-wrapper"></div>
 						
 						<div class="header-content" id="headerContent">
@@ -365,25 +365,43 @@ $(document).ready(function () {
         content = `
           <div class="glass-wrapper"></div>
           <div class="header-content" id="headerContent">
-            <h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions open. dm me.</p>
+            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
           </div>
         `;
       }
 
-      // Replace the inner content
-      $('#header .inner').html(content);
+      const $inner = $('#header .inner');
+      const oldHeight = $inner.outerHeight();
 
-		setTimeout(() => {
- 	 $('#headerContent').css({
-  	  opacity: 1,
- 	   display: 'block',
-  	  zIndex: 2
- 		 });
-		}, 10);
-    }
+      // Create a temp element to measure new height
+      const $temp = $('<div>').css({
+        visibility: 'hidden',
+        position: 'absolute',
+        width: $inner.width()
+      }).html(content).appendTo('body');
 
-    // Let work behave as normal (uses the popup)
+      const newHeight = $temp.outerHeight();
+      $temp.remove();
+
+      // Animate the height change
+      $inner.css('height', oldHeight);
+      $inner.html(content);
+      $inner.animate({ height: newHeight }, 400, function () {
+        $inner.css('height', 'auto');
+      });
+
+      // Optional: Fade-in the new content
+      setTimeout(() => {
+        $('#headerContent').css({
+          opacity: 1,
+          display: 'block',
+          zIndex: 2
+        });
+      }, 10);
+    }ok
+
+    // Let work behave as normal
   });
 });
 </script>
