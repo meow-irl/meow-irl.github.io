@@ -401,55 +401,33 @@ $(document).ready(function () {
         const currentWidth = $inner.width();
         const currentHeight = $inner.height();
         
-        // Create a temporary clone to measure new size
-        const $temp = $('<div>').css({
-          position: 'absolute',
-          visibility: 'hidden',
-          top: '-9999px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }).html(newContent).appendTo('body');
-        
-        // Get new size from temporary element
-        const newWidth = $temp.width();
-        const newHeight = $temp.height();
-        
-        // Remove temporary element
-        $temp.remove();
-        
-        // Apply current size constraints
-        $inner.css({
-          maxWidth: currentWidth,
-          maxHeight: currentHeight,
-          overflow: 'hidden'
-        });
-        
         // Replace content
         $inner.html(newContent);
         
-        // Force browser reflow
-        void $inner[0].offsetHeight;
+        // Get new size
+        const newWidth = $inner.width();
+        const newHeight = $inner.height();
         
-        // Animate to new size
+        // Set explicit current size
         $inner.css({
-          maxWidth: newWidth,
-          maxHeight: newHeight
+          width: currentWidth,
+          height: currentHeight
         });
         
-        // Fade in new content immediately
-        setTimeout(() => {
-          $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
-        }, 10);
-        
-        // Clean up after animation
-        setTimeout(() => {
+        // Animate to new size
+        $inner.animate({
+          width: newWidth,
+          height: newHeight
+        }, 500, () => {
+          // Remove constraints
           $inner.css({
-            maxWidth: '',
-            maxHeight: '',
-            overflow: ''
+            width: '',
+            height: ''
           });
-        }, 500);
+          
+          // Fade in new content
+          $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
+        });
       }, 300);
     }
   });
