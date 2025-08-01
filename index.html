@@ -397,34 +397,38 @@ $(document).ready(function () {
 
       // Wait for fade-out to complete
       setTimeout(() => {
-        // Measure new size
-        const $temp = $('<div>').css({
-          visibility: 'hidden',
-          position: 'absolute',
-          display: 'flex',
-          'flex-direction': 'column',
-          'align-items': 'center'
-        }).html(content).appendTo('body');
+        // Store current size
+        const currentWidth = $inner.width();
+        const currentHeight = $inner.height();
         
-        const newWidth = $temp.outerWidth();
-        const newHeight = $temp.outerHeight();
-        $temp.remove();
-
-        // Animate container
-        $inner.css({
-          maxWidth: $inner.outerWidth(),
-          maxHeight: $inner.outerHeight()
-        });
-
         // Replace content
         $inner.html(content);
         
+        // Force browser to render new content before measuring
+        void $inner[0].offsetHeight;
+        
+        // Get new size
+        const newWidth = $inner.width();
+        const newHeight = $inner.height();
+        
+        // Set explicit current size
+        $inner.css({
+          maxWidth: currentWidth,
+          maxHeight: currentHeight
+        });
+        
+        // Force browser to apply CSS
+        void $inner[0].offsetHeight;
+        
         // Animate to new size
-        $inner.animate({
+        $inner.css({
           maxWidth: newWidth,
           maxHeight: newHeight
-        }, 500, () => {
-          // Remove size constraints after animation
+        });
+        
+        // After animation completes
+        setTimeout(() => {
+          // Remove constraints
           $inner.css({
             maxWidth: '',
             maxHeight: ''
@@ -434,17 +438,12 @@ $(document).ready(function () {
           setTimeout(() => {
             $inner.find('.fadeable').removeClass('hidden');
           }, 50);
-        });
+        }, 500); // Match CSS transition time
       }, 300); // Match fade-out duration
     }
   });
 });
 </script>
-
-
-
-
-
 
 	</body>
 </html>
