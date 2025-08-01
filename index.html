@@ -382,23 +382,27 @@ $(document).ready(function () {
           newContent = `
             <div class="glass-wrapper"></div>
             <div class="header-content">
-              <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-              <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+              <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
             </div>`;
         } else if (target === '#comms') {
           newContent = `
             <div class="glass-wrapper"></div>
             <div class="header-content">
-              <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-              <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+              <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
             </div>`;
         }
         
         // Replace content
         $inner.html(newContent);
         
-        // Fade in new content
-        $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
+        // Fade in new content after a short delay
+        setTimeout(function() {
+          $inner.find('.fadeable')
+            .css('opacity', 0)
+            .animate({opacity: 1}, 300);
+        }, 10);
       });
     }
   });
