@@ -350,56 +350,57 @@ $(document).ready(function () {
       const $inner = $('#header .inner');
       const $currentContent = $inner.find('.header-content');
 
-      // Save original size
-      const originalHeight = $inner.outerHeight();
-      const originalWidth = $inner.outerWidth();
+      // Fade out current content
+      $currentContent.animate({ opacity: 0 }, 200, function () {
+        // Prepare new content
+        let newContent = '';
+        if (target === '#about') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content" id="headerContent">
+              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender for the past year. i love among us its my favorite game it has so much strategy but everyone treats it as a JOKE!!</p>
+            </div>`;
+        } else if (target === '#comms') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content" id="headerContent">
+              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+            </div>`;
+        }
 
-      // Prepare new content
-      let newContent = '';
-      if (target === '#about') {
-        newContent = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content" id="headerContent" style="opacity:0;">
-            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender for the past year. i love among us its my favorite game it has so much strategy but everyone treats it as a JOKE!!</p>
-          </div>`;
-      } else if (target === '#comms') {
-        newContent = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content" id="headerContent" style="opacity:0;">
-            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-          </div>`;
-      }
+        // Create temp element to measure correct height
+        const $temp = $('<div class="inner temp-measure" style="position:absolute; visibility:hidden; pointer-events:none;"></div>')
+          .html(newContent)
+          .appendTo('body');
 
-      // Create a temporary element to measure target size
-      const $temp = $('<div class="inner temp-measure" style="position:absolute; visibility:hidden; pointer-events:none;"></div>')
-        .html(newContent)
-        .appendTo('body');
+        const targetHeight = $temp.outerHeight();
+        const targetWidth = $temp.outerWidth();
+        $temp.remove();
 
-      const targetHeight = $temp.outerHeight();
-      const targetWidth = $temp.outerWidth();
-      $temp.remove();
+        // Animate the container to the new size
+        $inner.animate({
+          height: targetHeight,
+          width: targetWidth
+        }, 400, function () {
+          // Replace content and hide it first
+          $inner.html(newContent);
+          const $newContent = $inner.find('.header-content');
+          $newContent.css({ opacity: 0 });
 
-      // Animate height/width shrink if needed
-      $inner.animate({
-        height: targetHeight,
-        width: targetWidth
-      }, 400, function () {
-        // After animation, replace content
-        $inner.html(newContent);
-        const $newContent = $inner.find('.header-content');
+          // Fade in new content
+          $newContent.animate({ opacity: 1 }, 200);
 
-        // Fade in new content
-        $newContent.animate({ opacity: 1 }, 200);
-
-        // Reset inner container size back to auto
-        $inner.css({ height: '', width: '' });
+          // Reset wrapper height/width to auto to avoid layout issues later
+          $inner.css({ height: '', width: '' });
+        });
       });
     }
   });
 });
 </script>
+
 
 
 
