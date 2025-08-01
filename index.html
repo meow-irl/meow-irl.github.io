@@ -377,7 +377,11 @@ $(document).ready(function () {
       
       // Step 1: Fade out current text
       $textElements.animate({opacity: 0}, 300, function() {
-        // Step 2: Prepare new content
+        // Step 2: Store current size
+        const currentWidth = $inner.width();
+        const currentHeight = $inner.height();
+        
+        // Step 3: Prepare new content
         let newContent;
         if (target === '#about') {
           newContent = `
@@ -391,20 +395,36 @@ $(document).ready(function () {
           `;
         }
         
-        // Step 3: Replace the text content
-        $headerContent.html(newContent);
+        // Step 4: Replace text content
+        $headerContent.find('h2, p').remove();
+        $headerContent.append(newContent);
         
-        // Step 4: Resize animation (if needed)
-        // Since we're just changing text, we'll do a quick opacity change
-        // to simulate the resize effect
-        $inner.animate({opacity: 0.7}, 200, function() {
-          // Step 5: Fade in new text
-          $headerContent.find('.fadeable')
+        // Step 5: Get new size
+        const newWidth = $inner.width();
+        const newHeight = $inner.height();
+        
+        // Step 6: Animate container size
+        $inner.css({
+          width: currentWidth,
+          height: currentHeight,
+          overflow: 'hidden'
+        });
+        
+        $inner.animate({
+          width: newWidth,
+          height: newHeight
+        }, 500, function() {
+          // Step 7: Remove constraints
+          $inner.css({
+            width: '',
+            height: '',
+            overflow: ''
+          });
+          
+          // Step 8: Fade in new text
+          $inner.find('.fadeable')
             .css('opacity', 0)
             .animate({opacity: 1}, 300);
-          
-          // Step 6: Complete the resize effect
-          $inner.animate({opacity: 1}, 200);
         });
       });
     }
