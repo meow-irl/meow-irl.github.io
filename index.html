@@ -37,11 +37,17 @@
 			border: solid 1px #a000ff;
 			}
 
-			#header .inner {
- 			 position: relative;
- 			 overflow: hidden;
- 			 transition: max-width 0.5s ease, max-height 0.5s ease;
-			}
+			.inner {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: max-width 0.5s ease, max-height 0.5s ease;
+  max-width: 800px; /* or auto */
+  margin: 0 auto;
+}
 
 			.fade-out {
  			 opacity: 0;
@@ -79,11 +85,15 @@
 			}
 
 
+.fadeable {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
 
-			.inner {
- 			position: relative;
-			z-index: 1;
-			}
+.fadeable.hidden {
+  opacity: 0;
+}
+		
 
 			.hi-welcome-text {
 			  position: absolute;
@@ -166,8 +176,8 @@
  							   display: block;
  							 ">
 							</div>
-							<h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
-							<p style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
+							<h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
+							<p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
 						</div>
 						
 					</div>
@@ -362,61 +372,70 @@ $(document).ready(function () {
       e.preventDefault();
 
       const $inner = $('#header .inner');
-      const $currentContent = $inner.find('.header-content, .glass-wrapper');
+      const $fadeables = $inner.find('.fadeable');
+      
+      // Fade out current text
+      $fadeables.addClass('hidden');
 
-      // Fade out current content
-      $currentContent.addClass('fade-out');
+      // Prepare new content
+      let content;
+      if (target === '#about') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content">
+            <h2 class="fadeable hidden" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p class="fadeable hidden" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+          </div>`;
+      } else if (target === '#comms') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content">
+            <h2 class="fadeable hidden" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p class="fadeable hidden" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+          </div>`;
+      }
 
+      // Wait for fade-out to complete
       setTimeout(() => {
-        // Measure current size
-        const originalWidth = $inner.outerWidth();
-        const originalHeight = $inner.outerHeight();
-
-        // Replace content
-        let newContent = '';
-        if (target === '#about') {
-          newContent = `
-            <div class="glass-wrapper"></div>
-            <div class="header-content fade-in" id="headerContent">
-              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender... filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
-            </div>`;
-        } else if (target === '#comms') {
-          newContent = `
-            <div class="glass-wrapper"></div>
-            <div class="header-content fade-in" id="headerContent">
-              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-            </div>`;
-        }
-
-        $inner.html(newContent);
-
-        // Temporarily apply hidden class to new content to measure its dimensions
-        const $temp = $('<div class="temp-measure" style="visibility:hidden;position:absolute;z-index:-999;"></div>');
-        $temp.html(newContent).appendTo('body');
-
+        // Measure new size
+        const $temp = $('<div>').css({
+          visibility: 'hidden',
+          position: 'absolute',
+          display: 'flex',
+          'flex-direction': 'column',
+          'align-items': 'center'
+        }).html(content).appendTo('body');
+        
         const newWidth = $temp.outerWidth();
         const newHeight = $temp.outerHeight();
         $temp.remove();
 
-        // Set explicit size to current
+        // Animate container
         $inner.css({
-          maxWidth: originalWidth,
-          maxHeight: originalHeight
+          maxWidth: $inner.outerWidth(),
+          maxHeight: $inner.outerHeight()
         });
 
-        // Force reflow
-        void $inner[0].offsetHeight;
-
+        // Replace content
+        $inner.html(content);
+        
         // Animate to new size
-        $inner.css({
+        $inner.animate({
           maxWidth: newWidth,
           maxHeight: newHeight
+        }, 500, () => {
+          // Remove size constraints after animation
+          $inner.css({
+            maxWidth: '',
+            maxHeight: ''
+          });
+          
+          // Fade in new content
+          setTimeout(() => {
+            $inner.find('.fadeable').removeClass('hidden');
+          }, 50);
         });
-
-        // Content is already visible with fade-in class
-      }, 300); // Wait for fade-out to finish
+      }, 300); // Match fade-out duration
     }
   });
 });
