@@ -381,20 +381,20 @@ $(document).ready(function () {
         if (target === '#about') {
           newContent = `
             <div class="header-content">
-              <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+              <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff; position: relative; z-index: 2;">about me</h2>
+              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700; position: relative; z-index: 2;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
             </div>`;
         } else if (target === '#comms') {
           newContent = `
             <div class="header-content">
-              <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+              <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff; position: relative; z-index: 2;">commissions</h2>
+              <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700; position: relative; z-index: 2;">commissions commissions commissions</p>
             </div>`;
         }
         
         // Replace content
         $inner.html(`
-          <div class="glass-wrapper"></div>
+          <div class="glass-wrapper" style="z-index: 1;"></div>
           ${newContent}
         `);
         
@@ -403,7 +403,7 @@ $(document).ready(function () {
           $inner.find('.fadeable')
             .css('opacity', 0)
             .animate({opacity: 1}, 300);
-        }, 10);
+        }, 50);
       });
     }
   });
