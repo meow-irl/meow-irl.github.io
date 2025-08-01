@@ -388,7 +388,7 @@ $(document).ready(function () {
       
       // Fade out current content
       $headerContent.find('.fadeable').animate({opacity: 0}, 250, function() {
-        // Store current size
+        // Store current size BEFORE changing content
         const currentWidth = $inner.width();
         const currentHeight = $inner.height();
         
@@ -406,25 +406,41 @@ $(document).ready(function () {
         } 
         else if (target === '#comms') {
           newContent = `
-            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-sping: 0.3rem; color: #a000ff;">commissions</h2>
+            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
             <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
           `;
         }
         
-        // Replace content
-        $headerContent.html(newContent);
+        // Create a temporary container to measure new size
+        const $temp = $('<div>').css({
+          position: 'absolute',
+          visibility: 'hidden',
+          top: '-9999px',
+          width: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }).html(newContent).appendTo('body');
         
-        // Get new size
-        const newWidth = $inner.width();
-        const newHeight = $inner.height();
+        // Get new size from temporary element
+        const newWidth = $temp.width();
+        const newHeight = $temp.height();
+        $temp.remove();
         
-        // Animate container size
+        // Set container to fixed size BEFORE replacing content
         $inner.css({
           width: currentWidth,
           height: currentHeight,
           overflow: 'hidden'
         });
         
+        // Replace content
+        $headerContent.html(newContent);
+        
+        // Force browser reflow
+        void $inner[0].offsetHeight;
+        
+        // Animate to new size
         $inner.animate({
           width: newWidth,
           height: newHeight
