@@ -373,10 +373,11 @@ $(document).ready(function () {
 
       const $inner = $('#header .inner');
       const $headerContent = $inner.find('.header-content');
+      const $textElements = $headerContent.find('h2, p');
       
-      // Fade out current text
-      $headerContent.animate({opacity: 0}, 300, function() {
-        // Prepare new text content
+      // Step 1: Fade out current text
+      $textElements.animate({opacity: 0}, 300, function() {
+        // Step 2: Prepare new content
         let newContent;
         if (target === '#about') {
           newContent = `
@@ -390,11 +391,21 @@ $(document).ready(function () {
           `;
         }
         
-        // Replace only the text content
+        // Step 3: Replace the text content
         $headerContent.html(newContent);
         
-        // Fade in new content
-        $headerContent.animate({opacity: 1}, 300);
+        // Step 4: Resize animation (if needed)
+        // Since we're just changing text, we'll do a quick opacity change
+        // to simulate the resize effect
+        $inner.animate({opacity: 0.7}, 200, function() {
+          // Step 5: Fade in new text
+          $headerContent.find('.fadeable')
+            .css('opacity', 0)
+            .animate({opacity: 1}, 300);
+          
+          // Step 6: Complete the resize effect
+          $inner.animate({opacity: 1}, 200);
+        });
       });
     }
   });
