@@ -414,19 +414,25 @@ $(document).ready(function () {
           height: currentHeight
         });
         
+        // Force browser reflow
+        void $inner[0].offsetHeight;
+        
         // Animate to new size
         $inner.animate({
           width: newWidth,
           height: newHeight
-        }, 500, () => {
-          // Remove constraints
-          $inner.css({
-            width: '',
-            height: ''
-          });
-          
-          // Fade in new content
-          $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
+        }, {
+          duration: 500,
+          complete: function() {
+            // Remove constraints
+            $inner.css({
+              width: '',
+              height: ''
+            });
+            
+            // Fade in new content
+            $inner.find('.fadeable').css('opacity', 0).removeClass('hidden').animate({opacity: 1}, 300);
+          }
         });
       }, 300);
     }
