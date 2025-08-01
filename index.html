@@ -383,15 +383,15 @@ $(document).ready(function () {
         content = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
-            <h2 class="fadeable hidden" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p class="fadeable hidden" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+            <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
           </div>`;
       } else if (target === '#comms') {
         content = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
-            <h2 class="fadeable hidden" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p class="fadeable hidden" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+            <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
           </div>`;
       }
 
@@ -404,9 +404,6 @@ $(document).ready(function () {
         // Replace content
         $inner.html(content);
         
-        // Force browser to render new content before measuring
-        void $inner[0].offsetHeight;
-        
         // Get new size
         const newWidth = $inner.width();
         const newHeight = $inner.height();
@@ -414,13 +411,14 @@ $(document).ready(function () {
         // Set explicit current size
         $inner.css({
           maxWidth: currentWidth,
-          maxHeight: currentHeight
+          maxHeight: currentHeight,
+          overflow: 'hidden'
         });
         
         // Force browser to apply CSS
         void $inner[0].offsetHeight;
         
-        // Animate to new size
+        // Animate to new size using CSS transitions
         $inner.css({
           maxWidth: newWidth,
           maxHeight: newHeight
@@ -431,13 +429,14 @@ $(document).ready(function () {
           // Remove constraints
           $inner.css({
             maxWidth: '',
-            maxHeight: ''
+            maxHeight: '',
+            overflow: ''
           });
           
           // Fade in new content
-          setTimeout(() => {
-            $inner.find('.fadeable').removeClass('hidden');
-          }, 50);
+          $inner.find('.fadeable').each(function() {
+            $(this).css('opacity', 0).removeClass('hidden').animate({opacity: 1}, 300);
+          });
         }, 500); // Match CSS transition time
       }, 300); // Match fade-out duration
     }
