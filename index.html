@@ -378,16 +378,16 @@ $(document).ready(function () {
       $fadeables.addClass('hidden');
 
       // Prepare new content
-      let content;
+      let newContent;
       if (target === '#about') {
-        content = `
+        newContent = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
             <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
             <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
           </div>`;
       } else if (target === '#comms') {
-        content = `
+        newContent = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
             <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
@@ -401,44 +401,56 @@ $(document).ready(function () {
         const currentWidth = $inner.width();
         const currentHeight = $inner.height();
         
-        // Replace content
-        $inner.html(content);
+        // Create a temporary clone to measure new size
+        const $temp = $('<div>').css({
+          position: 'absolute',
+          visibility: 'hidden',
+          top: '-9999px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }).html(newContent).appendTo('body');
         
-        // Get new size
-        const newWidth = $inner.width();
-        const newHeight = $inner.height();
+        // Get new size from temporary element
+        const newWidth = $temp.width();
+        const newHeight = $temp.height();
         
-        // Set explicit current size
+        // Remove temporary element
+        $temp.remove();
+        
+        // Apply current size constraints
         $inner.css({
           maxWidth: currentWidth,
           maxHeight: currentHeight,
           overflow: 'hidden'
         });
         
-        // Force browser to apply CSS
+        // Replace content
+        $inner.html(newContent);
+        
+        // Force browser reflow
         void $inner[0].offsetHeight;
         
-        // Animate to new size using CSS transitions
+        // Animate to new size
         $inner.css({
           maxWidth: newWidth,
           maxHeight: newHeight
         });
         
-        // After animation completes
+        // Fade in new content immediately
         setTimeout(() => {
-          // Remove constraints
+          $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
+        }, 10);
+        
+        // Clean up after animation
+        setTimeout(() => {
           $inner.css({
             maxWidth: '',
             maxHeight: '',
             overflow: ''
           });
-          
-          // Fade in new content
-          $inner.find('.fadeable').each(function() {
-            $(this).css('opacity', 0).removeClass('hidden').animate({opacity: 1}, 300);
-          });
-        }, 500); // Match CSS transition time
-      }, 300); // Match fade-out duration
+        }, 500);
+      }, 300);
     }
   });
 });
