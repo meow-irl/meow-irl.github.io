@@ -374,67 +374,32 @@ $(document).ready(function () {
       const $inner = $('#header .inner');
       const $fadeables = $inner.find('.fadeable');
       
-      // Fade out current text
-      $fadeables.addClass('hidden');
-
-      // Prepare new content
-      let newContent;
-      if (target === '#about') {
-        newContent = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content">
-            <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
-          </div>`;
-      } else if (target === '#comms') {
-        newContent = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content">
-            <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-          </div>`;
-      }
-
-      // Wait for fade-out to complete
-      setTimeout(() => {
-        // Store current size
-        const currentWidth = $inner.width();
-        const currentHeight = $inner.height();
+      // Fade out current content
+      $fadeables.animate({opacity: 0}, 300, function() {
+        // Prepare new content
+        let newContent;
+        if (target === '#about') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content">
+              <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+              <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+            </div>`;
+        } else if (target === '#comms') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content">
+              <h2 class="fadeable" style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+              <p class="fadeable" style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+            </div>`;
+        }
         
         // Replace content
         $inner.html(newContent);
         
-        // Get new size
-        const newWidth = $inner.width();
-        const newHeight = $inner.height();
-        
-        // Set explicit current size
-        $inner.css({
-          width: currentWidth,
-          height: currentHeight
-        });
-        
-        // Force browser reflow
-        void $inner[0].offsetHeight;
-        
-        // Animate to new size
-        $inner.animate({
-          width: newWidth,
-          height: newHeight
-        }, {
-          duration: 500,
-          complete: function() {
-            // Remove constraints
-            $inner.css({
-              width: '',
-              height: ''
-            });
-            
-            // Fade in new content
-            $inner.find('.fadeable').css('opacity', 0).removeClass('hidden').animate({opacity: 1}, 300);
-          }
-        });
-      }, 300);
+        // Fade in new content
+        $inner.find('.fadeable').css('opacity', 0).animate({opacity: 1}, 300);
+      });
     }
   });
 });
