@@ -344,64 +344,62 @@ $(document).ready(function () {
   $('#mainNav a').on('click', function (e) {
     const target = $(this).attr('href');
 
-    // Only override for about or comms
     if (target === '#about' || target === '#comms') {
       e.preventDefault();
 
-      // Define the replacement content
-      let content = '';
-
-      if (target === '#about') {
-        content = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content" id="headerContent">
-            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender for the past year. i love among us its my favorite game it has so much strategy but everyone treats it as a JOKE!! its not afucking JOKE its such a cool game with in depth strategy and skibidi fortnite energy. you dont know me SON!!</p>
-          </div>
-        `;
-      }
-
-      if (target === '#comms') {
-        content = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content" id="headerContent">
-            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-          </div>
-        `;
-      }
-
       const $inner = $('#header .inner');
-      const oldHeight = $inner.outerHeight();
+      const $currentContent = $inner.find('.header-content');
 
-      // Create a temp element to measure new height
-      const $temp = $('<div>').css({
-        visibility: 'hidden',
-        position: 'absolute',
-        width: $inner.width()
-      }).html(content).appendTo('body');
-
-      const newHeight = $temp.outerHeight();
-      $temp.remove();
-
-      // Animate the height change
-      $inner.css('height', oldHeight);
-      $inner.html(content);
-      $inner.animate({ height: newHeight }, 400, function () {
-        $inner.css('height', 'auto');
-      });
-
-      // Optional: Fade-in the new content
-      setTimeout(() => {
-        $('#headerContent').css({
-          opacity: 1,
-          display: 'block',
-          zIndex: 2
+      // Fade out old content first
+      $currentContent.fadeOut(200, () => {
+        // Set a fixed height and width to allow animation
+        const originalHeight = $inner.outerHeight();
+        const originalWidth = $inner.outerWidth();
+        $inner.css({
+          height: originalHeight,
+          width: originalWidth,
+          overflow: 'hidden'
         });
-      }, 10);
-    }
 
-    // Let work behave as normal
+        // Define the new content
+        let newContent = '';
+        if (target === '#about') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content" id="headerContent" style="display: none;">
+              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender for the past year. i love among us its my favorite game it has so much strategy but everyone treats it as a JOKE!!</p>
+            </div>`;
+        } else if (target === '#comms') {
+          newContent = `
+            <div class="glass-wrapper"></div>
+            <div class="header-content" id="headerContent" style="display: none;">
+              <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+            </div>`;
+        }
+
+        // Add new content hidden temporarily
+        $inner.html(newContent);
+
+        // Measure target size
+        const $newContent = $inner.find('.header-content');
+        $newContent.css('display', 'block').css('visibility', 'hidden');
+        const targetHeight = $inner.outerHeight();
+        const targetWidth = $inner.outerWidth();
+        $newContent.css('display', 'none').css('visibility', 'visible');
+
+        // Animate height and width
+        $inner.animate(
+          { height: targetHeight, width: targetWidth },
+          400,
+          () => {
+            $inner.css({ height: '', width: '', overflow: '' });
+            $newContent.fadeIn(200);
+          }
+        );
+      });
+    }
   });
 });
 </script>
