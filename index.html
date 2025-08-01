@@ -99,8 +99,25 @@
 .fadeable.hidden {
   opacity: 0;
 }
-		
 
+/* Add to your existing styles */
+.inner.animating {
+  overflow: hidden;
+  transition: none !important; /* Disable CSS transitions during JS animation */
+}
+
+/* Ensure consistent styling for all states */
+#header .inner {
+  padding: 2rem;
+  min-width: 300px;
+  min-height: 200px;
+}
+
+.header-content {
+  width: 100%;
+  text-align: center;
+}
+		
 			.hi-welcome-text {
 			  position: absolute;
  			 top: 40%;
@@ -372,13 +389,11 @@
 <script>
 // Store the main content for easy restoration
 const mainContent = `
-  <div class="header-content">
-    <div class="profile-picture" style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2px solid #a000ff; margin: 0 auto; margin-top: -25px;">
-      <img src="images/checkit.png" alt="pfp" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-    </div>
-    <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
-    <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
+  <div class="profile-picture" style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2px solid #a000ff; margin: 0 auto; margin-top: -25px;">
+    <img src="images/checkit.png" alt="pfp" style="width: 100%; height: 100%; object-fit: cover; display: block;">
   </div>
+  <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
+  <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
 `;
 
 $(document).ready(function () {
@@ -394,10 +409,11 @@ $(document).ready(function () {
       
       // Step 1: Fade out current content
       $inner.addClass('animating');
-      $headerContent.find('.fadeable').css('opacity', 0);
-      
-      // Short delay to allow fade-out to be visible
-      setTimeout(() => {
+      $headerContent.find('.fadeable').animate({opacity: 0}, 250, function() {
+        // Store current size BEFORE changing content
+        const currentWidth = $inner.width();
+        const currentHeight = $inner.height();
+        
         // Prepare new content
         let newContent;
         if (target === '#work') {
@@ -420,29 +436,47 @@ $(document).ready(function () {
         // Replace content
         $headerContent.html(newContent);
         
-        // Get new dimensions
-        const newWidth = $inner.width();
-        const newHeight = $inner.height();
+        // Get new size
+        const newWidth = $headerContent.width();
+        const newHeight = $headerContent.height();
         
-        // Set new dimensions for transition
+        // Set container to current size before animation
         $inner.css({
-          width: newWidth,
-          height: newHeight
+          width: currentWidth,
+          height: currentHeight
         });
         
-        // Fade in new content after transition completes
-        setTimeout(() => {
-          $headerContent.find('.fadeable')
-            .css('opacity', 0)
-            .animate({opacity: 1}, 300, () => {
-              $inner.removeClass('animating');
+        // Force browser reflow
+        void $inner[0].offsetHeight;
+        
+        // Animate to new size
+        $inner.animate({
+          width: newWidth,
+          height: newHeight
+        }, {
+          duration: 500,
+          complete: function() {
+            // Remove fixed size constraints
+            $inner.css({
+              width: '',
+              height: ''
             });
-        }, 500);
-      }, 300);
+            
+            // Fade in new content
+            $headerContent.find('.fadeable')
+              .css('opacity', 0)
+              .animate({opacity: 1}, 300, function() {
+                $inner.removeClass('animating');
+              });
+          }
+        });
+      });
     }
   });
 });
 </script>
+
+
 
 	</body>
 </html>
