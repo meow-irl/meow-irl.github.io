@@ -386,12 +386,12 @@ $(document).ready(function () {
       const $inner = $('#header .inner');
       const $headerContent = $inner.find('.header-content');
       
-      // Fade out current content
-      $headerContent.find('.fadeable').animate({opacity: 0}, 250, function() {
-        // Store current size BEFORE changing content
-        const currentWidth = $inner.width();
-        const currentHeight = $inner.height();
-        
+      // Step 1: Fade out current content
+      $inner.addClass('animating');
+      $headerContent.find('.fadeable').css('opacity', 0);
+      
+      // Short delay to allow fade-out to be visible
+      setTimeout(() => {
         // Prepare new content
         let newContent;
         if (target === '#work') {
@@ -411,56 +411,39 @@ $(document).ready(function () {
           `;
         }
         
-        // Create a temporary container to measure new size
-        const $temp = $('<div>').css({
-          position: 'absolute',
-          visibility: 'hidden',
-          top: '-9999px',
-          width: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }).html(newContent).appendTo('body');
-        
-        // Get new size from temporary element
-        const newWidth = $temp.width();
-        const newHeight = $temp.height();
-        $temp.remove();
-        
-        // Set container to fixed size BEFORE replacing content
-        $inner.css({
-          width: currentWidth,
-          height: currentHeight,
-          overflow: 'hidden'
-        });
-        
         // Replace content
         $headerContent.html(newContent);
         
-        // Force browser reflow
-        void $inner[0].offsetHeight;
+        // Get new dimensions
+        const newWidth = $inner.width();
+        const newHeight = $inner.height();
         
-        // Animate to new size
-        $inner.animate({
+        // Set new dimensions for transition
+        $inner.css({
           width: newWidth,
           height: newHeight
-        }, 500, function() {
-          // Remove constraints
-          $inner.css({
-            width: '',
-            height: '',
-            overflow: ''
-          });
-          
-          // Fade in new content
+        });
+        
+        // Fade in new content after transition completes
+        setTimeout(() => {
           $headerContent.find('.fadeable')
             .css('opacity', 0)
-            .animate({opacity: 1}, 300);
-        });
-      });
+            .animate({opacity: 1}, 300, () => {
+              $inner.removeClass('animating');
+            });
+        }, 500);
+      }, 300);
     }
   });
 });
 </script>
+
+<style>
+/* Add to your existing styles */
+.inner.animating {
+  transition: width 0.5s ease, height 0.5s ease;
+  overflow: hidden;
+}
+</style>
 	</body>
 </html>
