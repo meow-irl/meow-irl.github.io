@@ -37,6 +37,22 @@
 			border: solid 1px #a000ff;
 			}
 
+			#header .inner {
+ 			 position: relative;
+ 			 overflow: hidden;
+ 			 transition: max-width 0.5s ease, max-height 0.5s ease;
+			}
+
+			.fade-out {
+ 			 opacity: 0;
+ 			 transition: opacity 0.3s ease;
+			}
+
+			.fade-in {
+  			opacity: 1;
+ 			 transition: opacity 0.3s ease;
+			}
+
 			.frosted-nav {
 			backdrop-filter: blur(12px) saturate(160%);
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
@@ -61,8 +77,6 @@
  			z-index: -1;
 			pointer-events: none;
 			}
-
-
 
 
 
@@ -350,44 +364,64 @@ $(document).ready(function () {
       const $inner = $('#header .inner');
       const $currentContent = $inner.find('.header-content, .glass-wrapper');
 
-      // Fade out old content
-      $currentContent.animate({ opacity: 0 }, 300, function () {
-        // Clear after fade out
-        $inner.empty();
+      // Fade out current content
+      $currentContent.addClass('fade-out');
 
-        // Define new content
+      setTimeout(() => {
+        // Measure current size
+        const originalWidth = $inner.outerWidth();
+        const originalHeight = $inner.outerHeight();
+
+        // Replace content
         let newContent = '';
         if (target === '#about') {
           newContent = `
             <div class="glass-wrapper"></div>
-            <div class="header-content" id="headerContent">
+            <div class="header-content fade-in" id="headerContent">
               <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender. i also love among us its a great game, if you didnt know! filler filler filler filler filler filler filler filler filler filler</p>
+              <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender... filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
             </div>`;
         } else if (target === '#comms') {
           newContent = `
             <div class="glass-wrapper"></div>
-            <div class="header-content" id="headerContent">
+            <div class="header-content fade-in" id="headerContent">
               <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
               <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
             </div>`;
         }
 
-        // Insert invisible new content first
         $inner.html(newContent);
-        const $newContent = $inner.find('.header-content');
-        $newContent.css({ opacity: 0 });
 
-        // Force browser to recalc layout
-        void $newContent[0].offsetHeight;
+        // Temporarily apply hidden class to new content to measure its dimensions
+        const $temp = $('<div class="temp-measure" style="visibility:hidden;position:absolute;z-index:-999;"></div>');
+        $temp.html(newContent).appendTo('body');
 
-        // Fade in
-        $newContent.animate({ opacity: 1 }, 300);
-      });
+        const newWidth = $temp.outerWidth();
+        const newHeight = $temp.outerHeight();
+        $temp.remove();
+
+        // Set explicit size to current
+        $inner.css({
+          maxWidth: originalWidth,
+          maxHeight: originalHeight
+        });
+
+        // Force reflow
+        void $inner[0].offsetHeight;
+
+        // Animate to new size
+        $inner.css({
+          maxWidth: newWidth,
+          maxHeight: newHeight
+        });
+
+        // Content is already visible with fade-in class
+      }, 300); // Wait for fade-out to finish
     }
   });
 });
 </script>
+
 
 
 
