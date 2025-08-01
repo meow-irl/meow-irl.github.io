@@ -373,15 +373,15 @@ $(document).ready(function () {
 
       const $inner = $('#header .inner');
       const $headerContent = $inner.find('.header-content');
+      const $profilePicture = $inner.find('.profile-picture');
       const $textElements = $headerContent.find('h2, p');
       
       // Step 1: Fade out current text
-      $textElements.animate({opacity: 0}, 300, function() {
-        // Step 2: Store current size
-        const currentWidth = $inner.width();
+      $textElements.animate({opacity: 0}, 250, function() {
+        // Store current size
         const currentHeight = $inner.height();
         
-        // Step 3: Prepare new content
+        // Step 2: Prepare new content
         let newContent;
         if (target === '#about') {
           newContent = `
@@ -395,37 +395,41 @@ $(document).ready(function () {
           `;
         }
         
-        // Step 4: Replace text content
+        // Step 3: Replace text content while preserving profile picture
         $headerContent.find('h2, p').remove();
         $headerContent.append(newContent);
         
-        // Step 5: Get new size
-        const newWidth = $inner.width();
+        // Step 4: Get new size
         const newHeight = $inner.height();
         
-        // Step 6: Animate container size
-        $inner.css({
-          width: currentWidth,
-          height: currentHeight,
-          overflow: 'hidden'
-        });
-        
-        $inner.animate({
-          width: newWidth,
-          height: newHeight
-        }, 500, function() {
-          // Step 7: Remove constraints
+        // Only animate if there's a significant size difference
+        if (Math.abs(currentHeight - newHeight) > 10) {
+          // Step 5: Animate container height
           $inner.css({
-            width: '',
-            height: '',
-            overflow: ''
+            height: currentHeight,
+            overflow: 'hidden'
           });
           
-          // Step 8: Fade in new text
+          $inner.animate({
+            height: newHeight
+          }, 500, function() {
+            // Step 6: Remove constraints
+            $inner.css({
+              height: '',
+              overflow: ''
+            });
+            
+            // Step 7: Fade in new text
+            $inner.find('.fadeable')
+              .css('opacity', 0)
+              .animate({opacity: 1}, 300);
+          });
+        } else {
+          // If no significant size change, just fade in new text
           $inner.find('.fadeable')
             .css('opacity', 0)
             .animate({opacity: 1}, 300);
-        });
+        }
       });
     }
   });
