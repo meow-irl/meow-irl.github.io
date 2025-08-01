@@ -49,6 +49,12 @@
   margin: 0 auto;
 }
 
+/* Add to your existing styles */
+.inner.animating {
+  transition: width 0.5s ease, height 0.5s ease;
+  overflow: hidden;
+}
+
 			.fade-out {
  			 opacity: 0;
  			 transition: opacity 0.3s ease;
@@ -438,12 +444,5 @@ $(document).ready(function () {
 });
 </script>
 
-<style>
-/* Add to your existing styles */
-.inner.animating {
-  transition: width 0.5s ease, height 0.5s ease;
-  overflow: hidden;
-}
-</style>
 	</body>
 </html>
