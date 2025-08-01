@@ -364,72 +364,83 @@
 
 
 <script>
+// Store the main content for easy restoration
+const mainContent = `
+  <div class="header-content">
+    <div class="profile-picture" style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2px solid #a000ff; margin: 0 auto; margin-top: -25px;">
+      <img src="images/checkit.png" alt="pfp" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+    </div>
+    <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
+    <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
+  </div>
+`;
+
 $(document).ready(function () {
   $('#mainNav a').on('click', function (e) {
     const target = $(this).attr('href');
-
-    if (target === '#about' || target === '#comms') {
+    
+    // Handle all navigation items
+    if (target === '#about' || target === '#work' || target === '#comms') {
       e.preventDefault();
 
       const $inner = $('#header .inner');
       const $headerContent = $inner.find('.header-content');
-      const $profilePicture = $inner.find('.profile-picture');
-      const $textElements = $headerContent.find('h2, p');
       
-      // Step 1: Fade out current text
-      $textElements.animate({opacity: 0}, 250, function() {
+      // Fade out current content
+      $headerContent.find('.fadeable').animate({opacity: 0}, 250, function() {
         // Store current size
+        const currentWidth = $inner.width();
         const currentHeight = $inner.height();
         
-        // Step 2: Prepare new content
+        // Prepare new content
         let newContent;
-        if (target === '#about') {
+        if (target === '#work') {
+          // Restore main content with profile picture
+          newContent = mainContent;
+        } 
+        else if (target === '#about') {
           newContent = `
-            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
           `;
-        } else if (target === '#comms') {
+        } 
+        else if (target === '#comms') {
           newContent = `
-            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-sping: 0.3rem; color: #a000ff;">commissions</h2>
+            <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
           `;
         }
         
-        // Step 3: Replace text content while preserving profile picture
-        $headerContent.find('h2, p').remove();
-        $headerContent.append(newContent);
+        // Replace content
+        $headerContent.html(newContent);
         
-        // Step 4: Get new size
+        // Get new size
+        const newWidth = $inner.width();
         const newHeight = $inner.height();
         
-        // Only animate if there's a significant size difference
-        if (Math.abs(currentHeight - newHeight) > 10) {
-          // Step 5: Animate container height
+        // Animate container size
+        $inner.css({
+          width: currentWidth,
+          height: currentHeight,
+          overflow: 'hidden'
+        });
+        
+        $inner.animate({
+          width: newWidth,
+          height: newHeight
+        }, 500, function() {
+          // Remove constraints
           $inner.css({
-            height: currentHeight,
-            overflow: 'hidden'
+            width: '',
+            height: '',
+            overflow: ''
           });
           
-          $inner.animate({
-            height: newHeight
-          }, 500, function() {
-            // Step 6: Remove constraints
-            $inner.css({
-              height: '',
-              overflow: ''
-            });
-            
-            // Step 7: Fade in new text
-            $inner.find('.fadeable')
-              .css('opacity', 0)
-              .animate({opacity: 1}, 300);
-          });
-        } else {
-          // If no significant size change, just fade in new text
-          $inner.find('.fadeable')
+          // Fade in new content
+          $headerContent.find('.fadeable')
             .css('opacity', 0)
             .animate({opacity: 1}, 300);
-        }
+        });
       });
     }
   });
