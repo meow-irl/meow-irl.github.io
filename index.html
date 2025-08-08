@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <!--
 	Dimension by HTML5 UP
@@ -49,12 +50,6 @@
   margin: 0 auto;
 }
 
-/* Add to your existing styles */
-.inner.animating {
-  transition: width 0.5s ease, height 0.5s ease;
-  overflow: hidden;
-}
-
 			.fade-out {
  			 opacity: 0;
  			 transition: opacity 0.3s ease;
@@ -91,65 +86,16 @@
 			}
 
 
-
-
-/* Add to your existing styles */
-.inner.animating {
-  overflow: hidden;
-  transition: none !important; /* Disable CSS transitions during JS animation */
-}
-
-
-.header-content {
-  width: 100%;
-  text-align: center;
-}
-
-#header .inner {
-  position: relative;
-  overflow: hidden;
-  width: 100%;              /* full-width always */
-  transition: max-height 0.5s ease;
-  max-height: 400px;        /* large enough for your tallest state */
-}
-
-#header .inner.collapsed {
-  max-height: 0;           /* will collapse completely during fade-out */
-}
-
 .fadeable {
   opacity: 1;
   transition: opacity 0.3s ease;
 }
+
 .fadeable.hidden {
   opacity: 0;
 }
-
-/* 1. The container starts collapsed */
-#header .inner {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  max-height: 0;
-  transition: max-height 0.5s ease;
-}
-
-/* 2. When expanded, allow it to grow to its content */
-#header .inner.expanded {
-  /* max-height will be set dynamically via JS */
-}
-
-/* 3. Fade rules for text */
-.fadeable {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.fadeable.visible {
-  opacity: 1;
-}
-
-
 		
+
 			.hi-welcome-text {
 			  position: absolute;
  			 top: 40%;
@@ -419,66 +365,41 @@
 
 
 <script>
-$(function() {
-  const $inner = $('#header .inner');
+$(document).ready(function () {
+  $('#mainNav a').on('click', function (e) {
+    const target = $(this).attr('href');
 
-  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function(e) {
-    e.preventDefault();
+    if (target === '#about' || target === '#comms') {
+      e.preventDefault();
 
-    // 1) Fade out existing text
-    $inner.find('.fadeable.visible').removeClass('visible');
-
-    // 2) Collapse the container
-    $inner.removeClass('expanded');
-
-    // 3) When collapse finishes, swap content and expand
-    $inner.one('transitionend', function handler(event) {
-      if (event.originalEvent.propertyName !== 'max-height') return;
-
-      $inner.off('transitionend', handler);
-
-      // Choose new HTML
-      let html = '';
-      if (this.hash === '#about') {
-        html = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content">
-            <h2 class="fadeable">about me</h2>
-            <p class="fadeable">…your about text here…</p>
-          </div>`;
-      } else {
-        html = `
-          <div class="glass-wrapper"></div>
-          <div class="header-content">
-            <h2 class="fadeable">commissions</h2>
-            <p class="fadeable">…your comms text here…</p>
-          </div>`;
-      }
-
-      // Inject it
-      $inner.html(html);
-
-      // Measure its full height
-      const fullHeight = $inner.prop('scrollHeight');
-
-      // Expand to that height
-      $inner
-        .css('max-height', fullHeight + 'px')
-        .addClass('expanded');
-
-      // When expansion finishes, fade text in
-      $inner.one('transitionend', function(e2) {
-        if (e2.originalEvent.propertyName !== 'max-height') return;
-        $inner.find('.fadeable').addClass('visible');
+      const $inner = $('#header .inner');
+      const $headerContent = $inner.find('.header-content');
+      
+      // Fade out current text
+      $headerContent.animate({opacity: 0}, 300, function() {
+        // Prepare new text content
+        let newContent;
+        if (target === '#about') {
+          newContent = `
+            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
+          `;
+        } else if (target === '#comms') {
+          newContent = `
+            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+          `;
+        }
+        
+        // Replace only the text content
+        $headerContent.html(newContent);
+        
+        // Fade in new content
+        $headerContent.animate({opacity: 1}, 300);
       });
-    });
+    }
   });
-
-  // Initialize: show your default content
-  $('#mainNav a[href="#about"]').trigger('click');
 });
 </script>
-
-
 	</body>
 </html>
