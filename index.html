@@ -38,28 +38,6 @@
 			border: solid 1px #a000ff;
 			}
 
-			.inner {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: max-width 0.5s ease, max-height 0.5s ease;
-  max-width: 800px; /* or auto */
-  margin: 0 auto;
-}
-
-			.fade-out {
- 			 opacity: 0;
- 			 transition: opacity 0.3s ease;
-			}
-
-			.fade-in {
-  			opacity: 1;
- 			 transition: opacity 0.3s ease;
-			}
-
 			.frosted-nav {
 			backdrop-filter: blur(12px) saturate(160%);
 			-webkit-backdrop-filter: blur(12px) saturate(160%);
@@ -86,15 +64,13 @@
 			}
 
 
-.fadeable {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
 
-.fadeable.hidden {
-  opacity: 0;
-}
-		
+
+
+			.inner {
+ 			position: relative;
+			z-index: 1;
+			}
 
 			.hi-welcome-text {
 			  position: absolute;
@@ -177,8 +153,8 @@
  							   display: block;
  							 ">
 							</div>
-							<h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
-							<p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
+							<h2 style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
+							<p style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
 						</div>
 						
 					</div>
@@ -369,37 +345,68 @@ $(document).ready(function () {
   $('#mainNav a').on('click', function (e) {
     const target = $(this).attr('href');
 
+    // Only override for about or comms
     if (target === '#about' || target === '#comms') {
       e.preventDefault();
 
+      // Define the replacement content
+      let content = '';
+
+      if (target === '#about') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content" id="headerContent">
+            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
+            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender for the past year. i love among us its my favorite game it has so much strategy but everyone treats it as a JOKE!! its not afucking JOKE its such a cool game with in depth strategy and skibidi fortnite energy. you dont know me SON!!</p>
+          </div>
+        `;
+      }
+
+      if (target === '#comms') {
+        content = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content" id="headerContent">
+            <h2 style="margin-top: -50px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
+            <p style="color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
+          </div>
+        `;
+      }
+
       const $inner = $('#header .inner');
-      const $headerContent = $inner.find('.header-content');
-      
-      // Fade out current text
-      $headerContent.animate({opacity: 0}, 300, function() {
-        // Prepare new text content
-        let newContent;
-        if (target === '#about') {
-          newContent = `
-            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
-          `;
-        } else if (target === '#comms') {
-          newContent = `
-            <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-          `;
-        }
-        
-        // Replace only the text content
-        $headerContent.html(newContent);
-        
-        // Fade in new content
-        $headerContent.animate({opacity: 1}, 300);
+      const oldHeight = $inner.outerHeight();
+
+      // Create a temp element to measure new height
+      const $temp = $('<div>').css({
+        visibility: 'hidden',
+        position: 'absolute',
+        width: $inner.width()
+      }).html(content).appendTo('body');
+
+      const newHeight = $temp.outerHeight();
+      $temp.remove();
+
+      // Animate the height change
+      $inner.css('height', oldHeight);
+      $inner.html(content);
+      $inner.animate({ height: newHeight }, 400, function () {
+        $inner.css('height', 'auto');
       });
+
+      // Optional: Fade-in the new content
+      setTimeout(() => {
+        $('#headerContent').css({
+          opacity: 1,
+          display: 'block',
+          zIndex: 2
+        });
+      }, 10);
     }
+
+    // Let work behave as normal
   });
 });
 </script>
+
+
 	</body>
 </html>
