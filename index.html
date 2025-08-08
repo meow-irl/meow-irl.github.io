@@ -92,6 +92,7 @@
 
 
 
+
 /* Add to your existing styles */
 .inner.animating {
   overflow: hidden;
@@ -123,6 +124,30 @@
 .fadeable.hidden {
   opacity: 0;
 }
+
+/* 1. The container starts collapsed */
+#header .inner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-height: 0;
+  transition: max-height 0.5s ease;
+}
+
+/* 2. When expanded, allow it to grow to its content */
+#header .inner.expanded {
+  /* max-height will be set dynamically via JS */
+}
+
+/* 3. Fade rules for text */
+.fadeable {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.fadeable.visible {
+  opacity: 1;
+}
+
 
 		
 			.hi-welcome-text {
@@ -394,59 +419,63 @@
 
 
 <script>
-$(document).ready(function () {
+$(function() {
   const $inner = $('#header .inner');
 
-  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function (e) {
+  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function(e) {
     e.preventDefault();
 
-    // 1) Fade out text
-    $inner.find('.fadeable').addClass('hidden');
+    // 1) Fade out existing text
+    $inner.find('.fadeable.visible').removeClass('visible');
 
-    // 2) After fade completes, collapse the container
-    setTimeout(() => {
-      $inner.addClass('collapsed');
+    // 2) Collapse the container
+    $inner.removeClass('expanded');
 
-      // 3) Prepare and measure the new content off-DOM
+    // 3) When collapse finishes, swap content and expand
+    $inner.one('transitionend', function handler(event) {
+      if (event.originalEvent.propertyName !== 'max-height') return;
+
+      $inner.off('transitionend', handler);
+
+      // Choose new HTML
       let html = '';
       if (this.hash === '#about') {
         html = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
             <h2 class="fadeable">about me</h2>
-            <p class="fadeable">…long about text…</p>
+            <p class="fadeable">…your about text here…</p>
           </div>`;
-      } else /* #comms */ {
+      } else {
         html = `
           <div class="glass-wrapper"></div>
           <div class="header-content">
             <h2 class="fadeable">commissions</h2>
-            <p class="fadeable">…commission info…</p>
+            <p class="fadeable">…your comms text here…</p>
           </div>`;
       }
 
-      const $temp = $('<div>')
-        .css({ position: 'absolute', visibility: 'hidden', width: $inner.width() })
-        .html(html)
-        .appendTo('body');
+      // Inject it
+      $inner.html(html);
 
-      const targetHeight = $temp.outerHeight(true);
-      $temp.remove();
+      // Measure its full height
+      const fullHeight = $inner.prop('scrollHeight');
 
-      // 4) Swap in HTML, then expand to measured height
-      $inner.html(html).css('max-height', 0).removeClass('collapsed');
-      // force reflow
-      void $inner[0].offsetHeight;
+      // Expand to that height
+      $inner
+        .css('max-height', fullHeight + 'px')
+        .addClass('expanded');
 
-      $inner.css('max-height', targetHeight);
-
-      // 5) Finally, fade the new text in
-      setTimeout(() => {
-        $inner.find('.fadeable').removeClass('hidden');
-      }, 500); // after the height animation
-
-    }, 300); // match your fade-out duration
+      // When expansion finishes, fade text in
+      $inner.one('transitionend', function(e2) {
+        if (e2.originalEvent.propertyName !== 'max-height') return;
+        $inner.find('.fadeable').addClass('visible');
+      });
+    });
   });
+
+  // Initialize: show your default content
+  $('#mainNav a[href="#about"]').trigger('click');
 });
 </script>
 
