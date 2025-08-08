@@ -91,14 +91,6 @@
 			}
 
 
-.fadeable {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.fadeable.hidden {
-  opacity: 0;
-}
 
 /* Add to your existing styles */
 .inner.animating {
@@ -106,17 +98,32 @@
   transition: none !important; /* Disable CSS transitions during JS animation */
 }
 
-/* Ensure consistent styling for all states */
-#header .inner {
-  padding: 2rem;
-  min-width: 300px;
-  min-height: 200px;
-}
 
 .header-content {
   width: 100%;
   text-align: center;
 }
+
+#header .inner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;              /* full-width always */
+  transition: max-height 0.5s ease;
+  max-height: 400px;        /* large enough for your tallest state */
+}
+
+#header .inner.collapsed {
+  max-height: 0;           /* will collapse completely during fade-out */
+}
+
+.fadeable {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.fadeable.hidden {
+  opacity: 0;
+}
+
 		
 			.hi-welcome-text {
 			  position: absolute;
@@ -387,94 +394,62 @@
 
 
 <script>
-// Store the main content for easy restoration
-const mainContent = `
-  <div class="profile-picture" style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2px solid #a000ff; margin: 0 auto; margin-top: -25px;">
-    <img src="images/checkit.png" alt="pfp" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-  </div>
-  <h2 class="fadeable" style="margin-top: 15px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">meow_irl</h2>
-  <p class="fadeable" style="margin-top: -25px; margin-bottom: -25px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">3d animator</p>
-`;
-
 $(document).ready(function () {
-  $('#mainNav a').on('click', function (e) {
-    const target = $(this).attr('href');
-    
-    // Handle all navigation items
-    if (target === '#about' || target === '#work' || target === '#comms') {
-      e.preventDefault();
+  const $inner = $('#header .inner');
 
-      const $inner = $('#header .inner');
-      const $headerContent = $inner.find('.header-content');
-      
-      // Step 1: Fade out current content
-      $inner.addClass('animating');
-      $headerContent.find('.fadeable').animate({opacity: 0}, 250, function() {
-        // Store current size BEFORE changing content
-        const currentWidth = $inner.width();
-        const currentHeight = $inner.height();
-        
-        // Prepare new content
-        let newContent;
-        if (target === '#work') {
-          // Restore main content with profile picture
-          newContent = mainContent;
-        } 
-        else if (target === '#about') {
-          newContent = `
-            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">about me</h2>
-            <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">hi im meow_irl im 18 years old and have been actively learning blender...</p>
-          `;
-        } 
-        else if (target === '#comms') {
-          newContent = `
-            <h2 class="fadeable" style="margin-top: 20px; font-size: 1.43rem; letter-spacing: 0.3rem; color: #a000ff;">commissions</h2>
-            <p class="fadeable" style="margin-top: 15px; color: rgba(160, 0, 255, 0.8); font-weight: 700;">commissions commissions commissions</p>
-          `;
-        }
-        
-        // Replace content
-        $headerContent.html(newContent);
-        
-        // Get new size
-        const newWidth = $headerContent.width();
-        const newHeight = $headerContent.height();
-        
-        // Set container to current size before animation
-        $inner.css({
-          width: currentWidth,
-          height: currentHeight
-        });
-        
-        // Force browser reflow
-        void $inner[0].offsetHeight;
-        
-        // Animate to new size
-        $inner.animate({
-          width: newWidth,
-          height: newHeight
-        }, {
-          duration: 500,
-          complete: function() {
-            // Remove fixed size constraints
-            $inner.css({
-              width: '',
-              height: ''
-            });
-            
-            // Fade in new content
-            $headerContent.find('.fadeable')
-              .css('opacity', 0)
-              .animate({opacity: 1}, 300, function() {
-                $inner.removeClass('animating');
-              });
-          }
-        });
-      });
-    }
+  $('#mainNav a[href="#about"], #mainNav a[href="#comms"]').on('click', function (e) {
+    e.preventDefault();
+
+    // 1) Fade out text
+    $inner.find('.fadeable').addClass('hidden');
+
+    // 2) After fade completes, collapse the container
+    setTimeout(() => {
+      $inner.addClass('collapsed');
+
+      // 3) Prepare and measure the new content off-DOM
+      let html = '';
+      if (this.hash === '#about') {
+        html = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content">
+            <h2 class="fadeable">about me</h2>
+            <p class="fadeable">…long about text…</p>
+          </div>`;
+      } else /* #comms */ {
+        html = `
+          <div class="glass-wrapper"></div>
+          <div class="header-content">
+            <h2 class="fadeable">commissions</h2>
+            <p class="fadeable">…commission info…</p>
+          </div>`;
+      }
+
+      const $temp = $('<div>')
+        .css({ position: 'absolute', visibility: 'hidden', width: $inner.width() })
+        .html(html)
+        .appendTo('body');
+
+      const targetHeight = $temp.outerHeight(true);
+      $temp.remove();
+
+      // 4) Swap in HTML, then expand to measured height
+      $inner.html(html).css('max-height', 0).removeClass('collapsed');
+      // force reflow
+      void $inner[0].offsetHeight;
+
+      $inner.css('max-height', targetHeight);
+
+      // 5) Finally, fade the new text in
+      setTimeout(() => {
+        $inner.find('.fadeable').removeClass('hidden');
+      }, 500); // after the height animation
+
+    }, 300); // match your fade-out duration
   });
 });
 </script>
+
 
 	</body>
 </html>
